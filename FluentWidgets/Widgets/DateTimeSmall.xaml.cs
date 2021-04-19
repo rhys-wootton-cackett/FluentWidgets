@@ -14,33 +14,24 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using FluentWidgets.Helpers;
+using FluentWidgets.WidgetModel;
 
 namespace FluentWidgets.Widgets
 {
     /// <summary>
     /// Interaction logic for TestWidget.xaml
     /// </summary>
-    public partial class TestWidget : WidgetBase
+    public partial class DateTimeSmall
     {
-        public DateTime CurrentDateAndTime { get; set; }
+        private DateTimeWidgetModel dtModel = new DateTimeWidgetModel();
 
-        public TestWidget()
+        public DateTimeSmall()
         {
             InitializeComponent();
-
-            this.DataContext = this;
-
-            DispatcherTimer dayTimer = new DispatcherTimer();
-            dayTimer.Interval = TimeSpan.FromMilliseconds(500);
-            dayTimer.Tick += (s, e) =>
-            {
-                CurrentDateAndTime = DateTime.Now;
-                PropertyChanged(this, new PropertyChangedEventArgs("CurrentDateAndTime"));
-            };
-            dayTimer.Start();
+            this.DataContext = dtModel;
         }
 
-        private void WidgetBase_LocationChanged(object sender, EventArgs e)
+        private void DateTimeSmall_LocationChanged(object sender, EventArgs e)
         {
             LocationChanged(sender, e);
         }

@@ -12,24 +12,26 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FluentWidgets.Widgets;
+using FluentWidgets.WidgetModel;
 
-namespace FluentWidgets
+namespace FluentWidgets.Widgets
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for DateTimeLarge.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DateTimeLarge
     {
-        public MainWindow()
+        private DateTimeWidgetModel dtModel = new DateTimeWidgetModel();
+
+        public DateTimeLarge()
         {
             InitializeComponent();
+            this.DataContext = dtModel;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void DateTimeLarge_LocationChanged(object sender, EventArgs e)
         {
-            var widget = new DateTimeLarge();
-            widget.Show();
+            LocationChanged(sender, e);
         }
     }
 }
