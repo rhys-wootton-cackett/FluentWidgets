@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
@@ -46,21 +47,22 @@ namespace FluentWidgets.Model
 
         public async Task<ObservableCollection<Event>> UpdateUpcomingEvents()
         {
-            var eventsList = new ObservableCollection<Event>();
+            var eventsList = new List<Event>();
 
             // Get all the calendars that exist
             var calendarList = await _service.CalendarList.List().ExecuteAsync();
 
             foreach (var calendar in calendarList.Items)
             {
+                var color = calendar.BackgroundColor;
+
                 // Request events in the next 7 days
                 var request = _service.Events.List(calendar.Id);
-                request.TimeMax = DateTime.Now + TimeSpan.FromDays(7);
+                request.TimeMax = DateTime.Now.Date.AddDays(7).AddTicks(-1);
                 request.TimeMin = DateTime.Now;
                 request.ShowDeleted = false;
                 request.SingleEvents = true;
                 request.MaxResults = 10;
-                request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
 
                 // Get the events and add them to the hashset
                 var events = await request.ExecuteAsync();
@@ -68,11 +70,34 @@ namespace FluentWidgets.Model
 
                 foreach (var eventItem in events.Items)
                 {
+                    eventItem.ColorId = color;
                     eventsList.Add(eventItem);
                 }
             }
 
-            return eventsList;
+            // Sort the list in ascending date and time
+            eventsList.Sort((e1, e2) =>
+            {
+                if (e1.Start.DateTime is null && e2.Start.DateTime is null)
+                {
+                    e1.Start.DateTime = DateTime.Parse(e1.Start.Date);
+                    e2.Start.DateTime = DateTime.Parse(e2.Start.Date);
+                }
+
+                if (e1.Start.DateTime is null)
+                {
+                    e1.Start.DateTime = DateTime.Parse(e1.Start.Date);
+                }
+
+                if (e2.Start.DateTime is null)
+                {
+                    e2.Start.DateTime = DateTime.Parse(e2.Start.Date);
+                }
+
+                return ((DateTime)e1.Start.DateTime).CompareTo(e2.Start.DateTime);
+            });
+
+            return new ObservableCollection<Event>(eventsList);
         }
     }
 }

@@ -19,26 +19,24 @@ namespace FluentWidgets.WidgetModel
         private DateTimeModel _dtModel = new DateTimeModel();
         
         public event PropertyChangedEventHandler PropertyChanged;
-        public DispatcherTimer _dateTimer, _calcTimer;
         public DateTime CurrentTime { get; set; } = DateTime.Now;
         public ObservableCollection<Event> CalcEventList { get; set; }
 
         public DateTimeWidgetModel()
         {
-            _dateTimer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromSeconds(0.1) };
-            _dateTimer.Tick += (sender, args) =>
-            {
-                CurrentTime = DateTime.Now;
-            };
-            _dateTimer.Start();
-
-            _calcTimer = new DispatcherTimer(DispatcherPriority.Render) { Interval = TimeSpan.FromMinutes(5) };
-            _calcTimer.Tick += async (sender, args) =>
-            {
-                this.CalcEventList = await _dtModel.UpdateUpcomingEvents();
-            };
-            _calcTimer.Start();
+            var dateTimer = new System.Threading.Timer(DateTimerTick, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(0.1));
+            var calTimer = new System.Threading.Timer(CalenderTimerTick, null, TimeSpan.FromSeconds(0),
+                TimeSpan.FromMinutes(5));
         }
 
+        private void DateTimerTick(object sender)
+        {
+            this.CurrentTime = DateTime.Now;
+        }
+
+        private async void CalenderTimerTick(object sender)
+        {
+            this.CalcEventList = await _dtModel.UpdateUpcomingEvents();
+        }
     }
 }

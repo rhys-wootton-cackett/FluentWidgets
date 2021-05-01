@@ -61,6 +61,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\DelegateCommand.cs" />
+    <Compile Include="Helpers\StringShortner.cs" />
     <Compile Include="Helpers\WpfScreen.cs" />
     <Compile Include="Model\DateTimeModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
