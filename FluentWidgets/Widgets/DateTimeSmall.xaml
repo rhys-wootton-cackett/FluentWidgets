@@ -26,7 +26,7 @@
             <TextBlock Text="{Binding CurrentTime, StringFormat={}{0:HH:mm:ss}}"
                        Style="{StaticResource HeaderTextBlockStyle}"
                        Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
-            <TextBlock Text="{Binding CurrentTime, StringFormat={}{0:dd MMMM yyyy}}"
+            <TextBlock Text="{Binding CurrentTime, StringFormat={}{0:dddd, d MMMM yyyy}}"
                        Style="{StaticResource BodyTextBlockStyle}"
                        Foreground="{StaticResource SystemControlBackgroundAccentBrush}"/>
         </ui:SimpleStackPanel>

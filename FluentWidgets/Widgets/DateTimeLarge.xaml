@@ -16,7 +16,8 @@
                     ResizeMode="NoResize"
                     LocationChanged="DateTimeLarge_LocationChanged">
     <Window.Resources>
-        <helpers:StringShortener x:Key="StringShortener" />
+        <helpers:StringShortener x:Key="StringShortener"/>
+        <helpers:CalendarTimeFormatter x:Key="CalendarTimeFormatter"/>
     </Window.Resources>
     <Border CornerRadius="10"
             Margin="3"
@@ -33,11 +34,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"
-                       Text="{Binding CurrentTime, StringFormat={}{0:HH:mm:ss}}"
+                       Text="{Binding CurrentTime, StringFormat={}{0:HH:mm:ss}, Mode=TwoWay}"
                        Style="{StaticResource HeaderTextBlockStyle}"
                        Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"/>
             <TextBlock Grid.Row="1"
-                       Text="{Binding CurrentTime, StringFormat={}{0:dddd, dd MMMM yyyy}}"
+                       Text="{Binding CurrentTime, StringFormat={}{0:dddd, d MMMM yyyy}, Mode=TwoWay}"
                        Style="{StaticResource BodyTextBlockStyle}"
                        Foreground="{StaticResource SystemControlBackgroundAccentBrush}"/>
             <Separator Grid.Row="2"
@@ -56,32 +57,17 @@
                         <DataTemplate>
                             <ui:SimpleStackPanel Orientation="Horizontal" Margin="0, 0, 0, 10">
                                 <ui:ProgressBar Width="5" 
-                                                Height="{Binding ActualHeight, ElementName=CalendarInfoPanel, Mode=OneWay}"
+                                                Height="{Binding ActualHeight, ElementName=CalendarInfoPanel}"
                                                 Value="100" 
                                                 Foreground="{Binding ColorId}" 
                                                 Margin="0,0,5,0"/>
                                 <ui:SimpleStackPanel x:Name="CalendarInfoPanel">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBlock Grid.Column="0"
-                                                   Text="{Binding Summary, Converter={StaticResource StringShortener}}"
-                                                   Foreground="{StaticResource SystemControlPageTextBaseHighBrush}"
-                                                   Style="{StaticResource BaseTextBlockStyle}"/>
-                                        <TextBlock Grid.Column="1"
-                                                   Text="{Binding Start.DateTime, StringFormat={}{0:d/M HH:mm}}"
-                                                   Foreground="#999"
-                                                   Style="{StaticResource BaseTextBlockStyle}"/>
-                                        <TextBlock Grid.Column="2"
-                                                   Text="{Binding End.DateTime, StringFormat={}{0: - HH:mm}}"
-                                                   Foreground="#999"
-                                                   Style="{StaticResource BaseTextBlockStyle}"/>
-                                    </Grid>
-                                    
+                                    <TextBlock Text="{Binding Summary, Converter={StaticResource StringShortener}}"
+                                               Foreground="{StaticResource SystemControlPageTextBaseHighBrush}"
+                                               Style="{StaticResource BaseTextBlockStyle}"/>
+                                    <TextBlock Text="{Binding Converter={StaticResource CalendarTimeFormatter}}"
+                                               Foreground="#999"
+                                               Style="{StaticResource BaseTextBlockStyle}"/>
                                     <TextBlock Text="{Binding Description}"
                                                Width="260"
                                                MaxHeight="34"

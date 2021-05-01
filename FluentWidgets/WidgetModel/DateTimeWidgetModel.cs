@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -17,15 +18,16 @@ namespace FluentWidgets.WidgetModel
     public class DateTimeWidgetModel : INotifyPropertyChanged
     {
         private DateTimeModel _dtModel = new DateTimeModel();
+        private System.Threading.Timer _dateTimer, _calTimer;
         
         public event PropertyChangedEventHandler PropertyChanged;
-        public DateTime CurrentTime { get; set; } = DateTime.Now;
+        public DateTime CurrentTime { get; set; }
         public ObservableCollection<Event> CalcEventList { get; set; }
 
         public DateTimeWidgetModel()
         {
-            var dateTimer = new System.Threading.Timer(DateTimerTick, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(0.1));
-            var calTimer = new System.Threading.Timer(CalenderTimerTick, null, TimeSpan.FromSeconds(0),
+             this._dateTimer = new System.Threading.Timer(DateTimerTick, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(0.1));
+             this._calTimer = new System.Threading.Timer(CalenderTimerTick, null, TimeSpan.FromSeconds(0),
                 TimeSpan.FromMinutes(5));
         }
 

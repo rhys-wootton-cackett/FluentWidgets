@@ -56,7 +56,7 @@ namespace FluentWidgets.Model
             {
                 var color = calendar.BackgroundColor;
 
-                // Request events in the next 7 days
+                // Request events for the next 7 days
                 var request = _service.Events.List(calendar.Id);
                 request.TimeMax = DateTime.Now.Date.AddDays(7).AddTicks(-1);
                 request.TimeMin = DateTime.Now;

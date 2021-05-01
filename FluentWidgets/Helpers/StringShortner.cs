@@ -13,7 +13,7 @@ namespace FluentWidgets.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (((string) value).Length > 20) return ((string) value).Substring(0, 17) + "...";
+            if (((string) value).Length > 35) return ((string) value).Substring(0, 32) + "...";
             return ((string) value);
         }
 
