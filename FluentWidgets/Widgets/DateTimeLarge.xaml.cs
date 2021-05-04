@@ -31,7 +31,7 @@ namespace FluentWidgets.Widgets
 
         private void DateTimeLarge_LocationChanged(object sender, EventArgs e)
         {
-            LocationChanged(sender, e);
+            //LocationChanged(sender, e);
         }
     }
 }

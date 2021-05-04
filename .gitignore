@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Credentials
 Creds/
+
+# App settings
+App.config

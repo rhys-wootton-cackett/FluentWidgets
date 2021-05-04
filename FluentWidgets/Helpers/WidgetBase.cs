@@ -6,16 +6,18 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Application = System.Windows.Application;
+using ContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace FluentWidgets.Helpers
 {
     public class WidgetBase : Window
     {
-        private readonly double SNAP_BOUNDARY = 30;
-        private readonly double WIDGET_MARGIN = 15;
+        private const double SNAP_BOUNDARY = 30;
+        private const double WIDGET_MARGIN = 10;
 
         protected WidgetBase()
         {
@@ -29,18 +31,16 @@ namespace FluentWidgets.Helpers
             };
         }
 
-        public new void LocationChanged(object sender, EventArgs e)
+        protected override void OnLocationChanged(EventArgs e)
         {
-            // Co-ordinates go from top-left, top-right, bottom-left, bottom-right
-
             // Check for snapping between the edges of windows
             var screen = WpfScreen.GetScreenFrom(new Point(this.Left, this.Top));
             CheckWindowCoordinates(screen.WorkingArea);
 
             // Check for snapping between other widgets on the screen
-            foreach (var widget in Application.Current.Windows.Cast<Window>().Where(w => w is WidgetBase && w != sender))
+            foreach (var widget in Application.Current.Windows.Cast<Window>().Where(w => w is WidgetBase))
             {
-                CheckWidgetCoordinates((WidgetBase) widget);
+                CheckWidgetCoordinates((WidgetBase)widget);
             }
         }
 

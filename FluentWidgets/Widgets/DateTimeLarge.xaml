@@ -13,12 +13,27 @@
                     WindowStyle="None"
                     Background="Transparent"
                     AllowsTransparency="True" 
-                    ResizeMode="NoResize"
-                    LocationChanged="DateTimeLarge_LocationChanged">
+                    ResizeMode="NoResize">
     <Window.Resources>
         <helpers:StringShortener x:Key="StringShortener"/>
         <helpers:CalendarTimeFormatter x:Key="CalendarTimeFormatter"/>
     </Window.Resources>
+
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Open" />
+            <MenuItem Header="Send to">
+                <MenuItem Header="Bluetooth" />
+                <MenuItem Header="Desktop (shortcut)" />
+                <MenuItem Header="Compressed file">
+                    <MenuItem Header="Compress and email" />
+                    <MenuItem Header="Compress to .7z" />
+                    <MenuItem Header="Compress to .zip" />
+                </MenuItem>
+            </MenuItem>
+        </ContextMenu>
+    </Window.ContextMenu>
+
     <Border CornerRadius="10"
             Margin="3"
             Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}">

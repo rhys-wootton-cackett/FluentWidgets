@@ -30,10 +30,5 @@ namespace FluentWidgets.Widgets
             InitializeComponent();
             this.DataContext = dtModel;
         }
-
-        private void DateTimeSmall_LocationChanged(object sender, EventArgs e)
-        {
-            LocationChanged(sender, e);
-        }
     }
 }

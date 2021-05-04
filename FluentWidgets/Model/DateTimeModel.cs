@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using FluentWidgets.Helpers;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
@@ -47,6 +48,8 @@ namespace FluentWidgets.Model
 
         public async Task<ObservableCollection<Event>> UpdateUpcomingEvents()
         {
+            if (!await NetConnect.IsOnline()) return new ObservableCollection<Event>();
+
             var eventsList = new List<Event>();
 
             // Get all the calendars that exist
@@ -56,13 +59,13 @@ namespace FluentWidgets.Model
             {
                 var color = calendar.BackgroundColor;
 
-                // Request events for the next 7 days
+                // Request events up to 30 days ahead, but only selecting the first 7
                 var request = _service.Events.List(calendar.Id);
-                request.TimeMax = DateTime.Now.Date.AddDays(7).AddTicks(-1);
+                request.TimeMax = DateTime.Now.Date.AddDays(30).AddTicks(-1);
                 request.TimeMin = DateTime.Now;
                 request.ShowDeleted = false;
                 request.SingleEvents = true;
-                request.MaxResults = 10;
+                request.MaxResults = 7;
 
                 // Get the events and add them to the hashset
                 var events = await request.ExecuteAsync();
