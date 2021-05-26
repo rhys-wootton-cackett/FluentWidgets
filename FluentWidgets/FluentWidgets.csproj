@@ -42,7 +42,9 @@
     <Reference Include="netstandard" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,17 +64,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Helpers\CalendarTimeFormatter.cs" />
+    <Compile Include="Helpers\Converters\CalendarTimeFormatter.cs" />
+    <Compile Include="Helpers\Converters\TemperatureConverter.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
+    <Compile Include="Helpers\GlobalCommands.cs" />
     <Compile Include="Helpers\NetConnect.cs" />
     <Compile Include="Helpers\OpenWeather.cs" />
-    <Compile Include="Helpers\StringShortner.cs" />
+    <Compile Include="Helpers\Converters\StringShortner.cs" />
     <Compile Include="Helpers\WpfScreen.cs" />
+    <Compile Include="Model\CPUPerformanceModel.cs" />
     <Compile Include="Model\DateTimeModel.cs" />
+    <Compile Include="Model\WeatherModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="WidgetModel\CPUPerformanceWidgetModel.cs" />
     <Compile Include="WidgetModel\DateTimeWidgetModel.cs" />
+    <Compile Include="WidgetModel\WeatherWidgetModel.cs" />
+    <Compile Include="Widgets\CPUPerformance.xaml.cs">
+      <DependentUpon>CPUPerformance.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Widgets\DateTimeLarge.xaml.cs">
       <DependentUpon>DateTimeLarge.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Widgets\WeatherLarge.xaml.cs">
+      <DependentUpon>WeatherLarge.xaml</DependentUpon>
     </Compile>
     <Compile Include="Widgets\DateTimeSmall.xaml.cs">
       <DependentUpon>DateTimeSmall.xaml</DependentUpon>
@@ -90,9 +104,17 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Widgets\CPUPerformance.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Widgets\DateTimeLarge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Widgets\WeatherLarge.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Widgets\DateTimeSmall.xaml">
       <SubType>Designer</SubType>
@@ -118,6 +140,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Creds\google.json" />
+    <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -137,10 +160,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Google.Apis.Calendar.v3">
-      <Version>1.51.0.2291</Version>
+      <Version>1.51.0.2312</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts">
-      <Version>10.0.18362.2005</Version>
+      <Version>10.0.19041.1</Version>
     </PackageReference>
     <PackageReference Include="ModernWpfUI">
       <Version>0.9.4</Version>
@@ -148,11 +171,23 @@
     <PackageReference Include="PropertyChanged.Fody">
       <Version>3.3.3</Version>
     </PackageReference>
+    <PackageReference Include="ScottPlot">
+      <Version>4.1.14</Version>
+    </PackageReference>
+    <PackageReference Include="ScottPlot.WPF">
+      <Version>4.1.14</Version>
+    </PackageReference>
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Net.Http.Json">
+      <Version>5.0.0</Version>
+    </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime">
-      <Version>4.6.0</Version>
+      <Version>4.7.0</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
-      <Version>4.6.0</Version>
+      <Version>4.7.0</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
@@ -161,8 +196,26 @@
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Resources\Weather\" />
+    <Resource Include="Resources\Weather\01d.png" />
+    <Resource Include="Resources\Weather\01n.png" />
+    <Resource Include="Resources\Weather\02d.png" />
+    <Resource Include="Resources\Weather\02n.png" />
+    <Resource Include="Resources\Weather\03d.png" />
+    <Resource Include="Resources\Weather\03n.png" />
+    <Resource Include="Resources\Weather\04d.png" />
+    <Resource Include="Resources\Weather\04n.png" />
+    <Resource Include="Resources\Weather\09d.png" />
+    <Resource Include="Resources\Weather\09n.png" />
+    <Resource Include="Resources\Weather\10d.png" />
+    <Resource Include="Resources\Weather\10n.png" />
+    <Resource Include="Resources\Weather\11d.png" />
+    <Resource Include="Resources\Weather\11n.png" />
+    <Resource Include="Resources\Weather\13d.png" />
+    <Resource Include="Resources\Weather\13n.png" />
+    <Resource Include="Resources\Weather\50d.png" />
+    <Resource Include="Resources\Weather\50n.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

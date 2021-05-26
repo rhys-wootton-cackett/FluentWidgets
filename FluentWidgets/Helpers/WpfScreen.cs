@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
@@ -13,44 +11,48 @@ namespace FluentWidgets.Helpers
 {
     public class WpfScreen
     {
+        private readonly Screen _screen;
+
+        internal WpfScreen(Screen screen)
+        {
+            _screen = screen;
+        }
+
+        public static WpfScreen Primary => new WpfScreen(Screen.PrimaryScreen);
+
+        public Rect DeviceBounds => GetRect(_screen.Bounds);
+
+        public Rect WorkingArea => GetRect(_screen.WorkingArea);
+
+        public bool IsPrimary => _screen.Primary;
+
+        public string DeviceName => _screen.DeviceName;
+
         public static IEnumerable<WpfScreen> AllScreens()
         {
-            return System.Windows.Forms.Screen.AllScreens.Select(screen => new WpfScreen(screen));
+            return Screen.AllScreens.Select(screen => new WpfScreen(screen));
         }
 
         public static WpfScreen GetScreenFrom(Window window)
         {
             var windowInteropHelper = new WindowInteropHelper(window);
-            var screen = System.Windows.Forms.Screen.FromHandle(windowInteropHelper.Handle);
+            var screen = Screen.FromHandle(windowInteropHelper.Handle);
             var wpfScreen = new WpfScreen(screen);
             return wpfScreen;
         }
 
         public static WpfScreen GetScreenFrom(Point point)
         {
-            var x = (int)Math.Round(point.X);
-            var y = (int)Math.Round(point.Y);
+            var x = (int) Math.Round(point.X);
+            var y = (int) Math.Round(point.Y);
 
             // are x,y device-independent-pixels ??
             var drawingPoint = new System.Drawing.Point(x, y);
-            var screen = System.Windows.Forms.Screen.FromPoint(drawingPoint);
+            var screen = Screen.FromPoint(drawingPoint);
             var wpfScreen = new WpfScreen(screen);
 
             return wpfScreen;
         }
-
-        public static WpfScreen Primary => new WpfScreen(System.Windows.Forms.Screen.PrimaryScreen);
-
-        private readonly Screen _screen;
-
-        internal WpfScreen(System.Windows.Forms.Screen screen)
-        {
-            this._screen = screen;
-        }
-
-        public Rect DeviceBounds => GetRect(this._screen.Bounds);
-
-        public Rect WorkingArea => GetRect(this._screen.WorkingArea);
 
         private static Rect GetRect(Rectangle value)
         {
@@ -63,9 +65,5 @@ namespace FluentWidgets.Helpers
                 Height = value.Height
             };
         }
-
-        public bool IsPrimary => this._screen.Primary;
-
-        public string DeviceName => this._screen.DeviceName;
     }
 }

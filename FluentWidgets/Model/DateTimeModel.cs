@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using FluentWidgets.Helpers;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
@@ -19,8 +16,8 @@ namespace FluentWidgets.Model
 {
     public class DateTimeModel
     {
-        private static string[] _scopes = { CalendarService.Scope.CalendarReadonly };
-        private CalendarService _service;
+        private static readonly string[] _scopes = {CalendarService.Scope.CalendarReadonly};
+        private readonly CalendarService _service;
 
         public DateTimeModel()
         {
@@ -34,15 +31,26 @@ namespace FluentWidgets.Model
                 // The file token.json stores the user's access and refresh tokens, and is created
                 // automatically when the authorization flow completes for the first time.
                 const string credPath = "token.json";
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, _scopes, 
-                    "user", CancellationToken.None, new FileDataStore(credPath, true)).Result;
+                try
+                {
+                    credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets,
+                        _scopes,
+                        "user", CancellationToken.None, new FileDataStore(credPath, true)).Result;
+                }
+                catch (Exception ex)
+                {
+                    // Sometimes initial credential verification fails, so just try again
+                    credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets,
+                        _scopes,
+                        "user", CancellationToken.None, new FileDataStore(credPath, true)).Result;
+                }
             }
 
             // Create the Google Calendar API service
-            _service = new CalendarService(new BaseClientService.Initializer()
+            _service = new CalendarService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
-                ApplicationName = "FluentWidgets",
+                ApplicationName = "FluentWidgets"
             });
         }
 
@@ -87,17 +95,11 @@ namespace FluentWidgets.Model
                     e2.Start.DateTime = DateTime.Parse(e2.Start.Date);
                 }
 
-                if (e1.Start.DateTime is null)
-                {
-                    e1.Start.DateTime = DateTime.Parse(e1.Start.Date);
-                }
+                if (e1.Start.DateTime is null) e1.Start.DateTime = DateTime.Parse(e1.Start.Date);
 
-                if (e2.Start.DateTime is null)
-                {
-                    e2.Start.DateTime = DateTime.Parse(e2.Start.Date);
-                }
+                if (e2.Start.DateTime is null) e2.Start.DateTime = DateTime.Parse(e2.Start.Date);
 
-                return ((DateTime)e1.Start.DateTime).CompareTo(e2.Start.DateTime);
+                return ((DateTime) e1.Start.DateTime).CompareTo(e2.Start.DateTime);
             });
 
             return new ObservableCollection<Event>(eventsList);

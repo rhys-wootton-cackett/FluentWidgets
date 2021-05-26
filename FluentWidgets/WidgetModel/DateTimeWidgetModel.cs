@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Threading;
-using FluentWidgets.Annotations;
+using System.Threading;
+using System.Windows;
+using System.Windows.Input;
 using FluentWidgets.Helpers;
 using FluentWidgets.Model;
 using Google.Apis.Calendar.v3.Data;
@@ -17,28 +12,33 @@ namespace FluentWidgets.WidgetModel
 {
     public class DateTimeWidgetModel : INotifyPropertyChanged
     {
-        private DateTimeModel _dtModel = new DateTimeModel();
-        private System.Threading.Timer _dateTimer, _calTimer;
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-        public DateTime CurrentTime { get; set; }
-        public ObservableCollection<Event> CalcEventList { get; set; }
+        private Timer _dateTimer, _calTimer;
+        private readonly DateTimeModel _dtModel = new DateTimeModel();
 
         public DateTimeWidgetModel()
         {
-             this._dateTimer = new System.Threading.Timer(DateTimerTick, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(0.1));
-             this._calTimer = new System.Threading.Timer(CalenderTimerTick, null, TimeSpan.FromSeconds(0),
+            _dateTimer = new Timer(DateTimerTick, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(0.1));
+            _calTimer = new Timer(CalenderTimerTick, null, TimeSpan.FromSeconds(0),
                 TimeSpan.FromMinutes(5));
         }
 
+        public DateTime CurrentTime { get; set; }
+        public Visibility IsRefreshing { get; set; }
+        public ObservableCollection<Event> CalcEventList { get; set; }
+        public ICommand RefreshCalendarNowCommand => new DelegateCommand(CalenderTimerTick);
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void DateTimerTick(object sender)
         {
-            this.CurrentTime = DateTime.Now;
+            CurrentTime = DateTime.Now;
         }
 
         private async void CalenderTimerTick(object sender)
         {
-            this.CalcEventList = await _dtModel.UpdateUpcomingEvents();
+            IsRefreshing = Visibility.Visible;
+            CalcEventList = await _dtModel.UpdateUpcomingEvents();
+            IsRefreshing = Visibility.Hidden;
         }
     }
 }

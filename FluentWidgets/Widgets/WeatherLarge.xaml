@@ -1,0 +1,64 @@
+﻿<helpers:WidgetBase x:Class="FluentWidgets.Widgets.WeatherLarge"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:ui="http://schemas.modernwpf.com/2019"
+                    xmlns:helpers="clr-namespace:FluentWidgets.Helpers"
+                    xmlns:widgetmodel="clr-namespace:FluentWidgets.WidgetModel"
+                    xmlns:converters="clr-namespace:FluentWidgets.Helpers.Converters"
+                    d:DataContext="{d:DesignInstance Type=widgetmodel:WeatherWidgetModel}"
+                    mc:Ignorable="d"
+                    Title="TestWidget"
+                    Height="300"
+                    Width="300"
+                    Style="{StaticResource WidgetWindow}">
+    <Window.Resources>
+        <converters:TemperatureConverter x:Key="TemperatureConverter"/>
+    </Window.Resources>
+    <Border CornerRadius="10"
+            Margin="3"
+            Padding="10,0">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#2C2836" Offset="0.0" />
+                <GradientStop Color="#0D0C10" Offset="0.5" />
+            </LinearGradientBrush>
+        </Border.Background>
+        <Border.Effect>
+            <DropShadowEffect ShadowDepth="0" BlurRadius="5" Color="#555555" />
+        </Border.Effect>
+        <Grid Margin="0,5,0,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Text="{Binding Weather.Name}"
+                       Margin="5"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Foreground="{StaticResource SystemControlPageTextBaseHighBrush}" />
+            <ui:SimpleStackPanel Grid.Row="1"
+                                 Grid.Column="0"
+                                 Margin="0,20,0,0"
+                                 Orientation="Horizontal">
+                <Image Source="{Binding Weather.Current.Weather[0].Icon}" />
+                <TextBlock
+                    Text="{Binding Weather.Current.Temp, Converter={StaticResource TemperatureConverter}, 
+                        ConverterParameter=false}"
+                    Style="{StaticResource SubheaderTextBlockStyle}"
+                    Margin="10,0,0,0"
+                    Foreground="{StaticResource SystemControlPageTextBaseHighBrush}" />
+            </ui:SimpleStackPanel>
+        </Grid>
+    </Border>
+</helpers:WidgetBase>
